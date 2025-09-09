@@ -161,7 +161,7 @@
     // ====== PDF Export ======
     document.getElementById('download').addEventListener('click', () => {
       const report = document.querySelector('.report');
-      html2canvas(report, { scale: 2, useCORS: true }).then(canvas => {
+      html2canvas(report, { scale: 1, useCORS: true }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
