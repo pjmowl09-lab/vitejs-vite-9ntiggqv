@@ -168,6 +168,9 @@
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'JPEG', 10, 10, imgWidth, imgHeight, '', 'FAST');
+
+      // Ambil nama RS dari input
         let rsName = document.getElementById("customerName").value || "Unknown";
         rsName = rsName.replace(/[^\w\s-]/g, "").trim(); // bersihin karakter aneh
         pdf.save(`PJM-Service-Report - ${rsName}.pdf`);
