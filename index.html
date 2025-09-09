@@ -102,13 +102,9 @@
       cursor: pointer;
       text-align: center;
     }
-    canvas {
-      border: 1px solid #000;
-    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
@@ -138,7 +134,7 @@
       </div>
       <div class="row">
         <div style="width:48%">
-          <label>Nama</label><input type="text" id="customerName"><br>
+          <label>Nama</label><input type="text"><br>
           <label>Department</label><input type="text"><br>
         </div>
         <div style="width:48%">
@@ -158,7 +154,7 @@
           <label><input type="checkbox"> Solved</label><br>
           <br><br><br><br>
           <p><b>CUSTOMER</b></p>
-          <label>Request By</label><input type="text"><br>
+          <label>Request By</label><input type="text" id="requestBy"><br>
           <label>Date/Time</label><input type="datetime-local"><br>
         </div>
         <div style="width:48%; border:1px solid #000; padding:5px;">
@@ -210,14 +206,10 @@
       <div class="row" style="text-align:center; margin-top:30px;">
         <div style="width:45%">
           <p><b>Customer</b></p>
-          <canvas id="sigCustomer" width="300" height="100"></canvas><br>
-          <button type="button" onclick="clearSignature('sigCustomer')">Clear</button>
           <p>( <span id="customerSignName">______________________</span> )</p>
         </div>
         <div style="width:45%">
           <p><b>Engineer / Electromedical</b></p>
-          <canvas id="sigEngineer" width="300" height="100"></canvas><br>
-          <button type="button" onclick="clearSignature('sigEngineer')">Clear</button>
           <p>( <span id="engineerSignName">______________________</span> )</p>
         </div>
       </div>
@@ -228,26 +220,7 @@
   <button class="download-btn" id="download">Download PDF</button>
 
   <script>
-    // Signature pad setup
-    const sigCustomerPad = new SignaturePad(document.getElementById('sigCustomer'));
-    const sigEngineerPad = new SignaturePad(document.getElementById('sigEngineer'));
-
-    function clearSignature(id) {
-      if (id === "sigCustomer") sigCustomerPad.clear();
-      else sigEngineerPad.clear();
-    }
-
-    // Update nama Customer di tanda tangan
-    document.getElementById("customerName").addEventListener("input", function() {
-      document.getElementById("customerSignName").textContent = this.value || "______________________";
-    });
-
-    // Update nama Engineer di tanda tangan
-    document.getElementById("engineerName").addEventListener("input", function() {
-      document.getElementById("engineerSignName").textContent = this.value || "______________________";
-    });
-
-    // Download PDF
+    // --- PDF Download ---
     document.getElementById('download').addEventListener('click', () => {
       const report = document.querySelector('.report');
       const images = report.querySelectorAll('img');
@@ -274,7 +247,18 @@
       }
     });
 
-    // Google Drive API
+    // --- Tanda tangan otomatis ---
+    document.getElementById("requestBy").addEventListener("input", function() {
+      document.getElementById("customerSignName").textContent = this.value || "______________________";
+    });
+
+    document.getElementById("engineerName").addEventListener("input", function() {
+      document.getElementById("engineerSignName").textContent = this.value || "______________________";
+    });
+  </script>
+
+  <script>
+    // --- Google Drive Upload (opsional, tinggal isi API_KEY & CLIENT_ID) ---
     function authenticate() {
       return gapi.auth2.getAuthInstance()
         .signIn({scope: "https://www.googleapis.com/auth/drive.file"})
