@@ -1,131 +1,36 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#007bff">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Report - PJM</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f9f9f9;
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    .report { background: white; padding: 20px; border: 1px solid #ccc; width: 900px; margin: auto; }
+    .section { margin-top: 15px; border: 1px solid #aaa; padding: 10px; }
+    .row { display: flex; justify-content: space-between; margin: 5px 0; }
+    label { display: inline-block; width: 150px; margin: 3px 0; }
+    input, textarea { width: calc(100% - 160px); padding: 3px; margin: 3px 0; }
+    input[type="datetime-local"] { width: auto; }
+    .signature-box { width: 300px; height: 100px; border: 1px solid #000; cursor: pointer; margin: auto; }
+    .signature-preview { width: 100%; height: 100%; object-fit: contain; }
+    .download-btn { display: block; margin: 20px auto; padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;
     }
-    .report {
-      background: white;
-      padding: 20px;
-      border: 1px solid #ccc;
-      width: 900px;
-      margin: auto;
+    .modal-content {
+      background: white; padding: 20px; border-radius: 8px; text-align: center;
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .section {
-      margin-top: 15px;
-      border: 1px solid #aaa;
-      padding: 10px;
-    }
-    .section-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      border-bottom: 1px solid #aaa;
-      padding-bottom: 3px;
-    }
-    label {
-      display: inline-block;
-      width: 150px;
-      margin: 3px 0;
-    }
-    input, textarea, select {
-      width: calc(100% - 160px);
-      padding: 3px;
-      margin: 3px 0;
-    }
-    input[type="checkbox"],
-    input[type="radio"] {
-      width: auto;
-      margin-right: 5px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin: 5px 0;
-    }
-    .small-input {
-      width: 100px !important;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    table, th, td {
-      border: 1px solid #000;
-    }
-    td {
-      padding: 5px;
-      text-align: center;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .logo-block img {
-      height: 80px;
-    }
-    .slogan {
-      margin: 0;
-      font-size: 12px;
-      text-align: center;
-    }
-    .title {
-      margin: 0 auto;
-      text-align: center;
-      flex: 1;
-    }
-    .title h2 {
-      font-size: 28px;
-      margin: 0;
-    }
-    .download-btn {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-    }
-    canvas {
-      border: 1px solid #000;
-      cursor: crosshair;
-    }
+    canvas { border: 1px solid #000; cursor: crosshair; }
+    button { margin: 5px; padding: 8px 15px; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
   <div class="report" id="report">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="logo-block">
-        <img src="https://res.cloudinary.com/dctn5devk/image/upload/v1756081418/logo-pjm_ggsluh.png" alt="LogoPJM">
-        <p class="slogan">
-          We Come To Bring Change<br>Kami datang membawa perubahan
-        </p>
-      </div>
-      <div class="title">
-        <h2>PJM SERVICE REPORT</h2>
-      </div>
-    </div>
+    <h2 style="text-align:center;">PJM SERVICE REPORT</h2>
 
     <!-- Customer Information -->
     <div class="section">
@@ -155,8 +60,7 @@
           <p><b>Service Status (Customer)</b></p>
           <label><input type="checkbox"> Contract Service</label><br>
           <label><input type="checkbox"> Warranty</label><br>
-          <label><input type="checkbox"> Solved</label><br>
-          <br><br><br><br>
+          <label><input type="checkbox"> Solved</label><br><br>
           <p><b>CUSTOMER</b></p>
           <label>Request By</label><input type="text" id="requestBy"><br>
           <label>Date/Time</label><input type="datetime-local"><br>
@@ -193,7 +97,7 @@
     <!-- Kepuasan -->
     <div class="section">
       <div class="section-title">Penilaian Kepuasan Pelanggan</div>
-      <table>
+      <table style="width:100%; border-collapse:collapse;" border="1">
         <tr>
           <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
         </tr>
@@ -209,92 +113,99 @@
     <div class="section">
       <div class="row" style="text-align:center; margin-top:30px;">
         <div style="width:45%">
-          <p><b>Customer</b><br></p>
-          <canvas id="sigCustomer" width="300" height="100"></canvas><br>
-          <button type="button" onclick="clearSignature('sigCustomer')">Clear</button>
+          <p><b>Customer</b></p>
+          <div id="sigCustomerBox" class="signature-box">
+            <img id="sigCustomerImg" class="signature-preview">
+          </div>
           <p>( <span id="customerSignName">______________________</span> )</p>
         </div>
         <div style="width:45%">
           <p><b>Engineer / Electromedical</b></p>
-          <canvas id="sigEngineer" width="300" height="100"></canvas><br>
-          <button type="button" onclick="clearSignature('sigEngineer')">Clear</button>
+          <div id="sigEngineerBox" class="signature-box">
+            <img id="sigEngineerImg" class="signature-preview">
+          </div>
           <p>( <span id="engineerSignName">______________________</span> )</p>
         </div>
       </div>
     </div>
-
   </div>
 
   <button class="download-btn" id="download">Download PDF</button>
 
+  <!-- Modal tanda tangan -->
+  <div id="signatureModal" class="modal">
+    <div class="modal-content">
+      <h3>Gambar Tanda Tangan</h3>
+      <canvas id="signaturePad" width="500" height="200"></canvas><br>
+      <button id="clearBtn">Clear</button>
+      <button id="saveBtn">Selesai</button>
+      <button id="closeBtn">Batal</button>
+    </div>
+  </div>
+
   <script>
-    // Fungsi Download PDF
-    document.getElementById('download').addEventListener('click', () => {
-      const report = document.querySelector('.report');
-      const images = report.querySelectorAll('img');
-      let loaded = 0;
+    // === Modal Signature Logic ===
+    let currentTarget = null;
+    const modal = document.getElementById("signatureModal");
+    const canvas = document.getElementById("signaturePad");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
 
-      images.forEach(img => {
-        if(img.complete) loaded++;
-        else img.onload = () => { loaded++; if(loaded === images.length) capture(); };
-      });
-
-      if(loaded === images.length) capture();
-
-      function capture() {
-        html2canvas(report, { scale: 2, useCORS: true }).then(canvas => {
-          const imgData = canvas.toDataURL('image/png');
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const pageWidth = pdf.internal.pageSize.getWidth();
-          const imgWidth = pageWidth - 20;
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-          pdf.save('PJM-Service-Report.pdf');
-        });
-      }
-    });
-
-    // Signature Canvas
-    function initSignature(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      const ctx = canvas.getContext("2d");
-      let drawing = false;
-
-      canvas.addEventListener("mousedown", e => {
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(e.offsetX, e.offsetY);
-      });
-
-      canvas.addEventListener("mousemove", e => {
-        if (drawing) {
-          ctx.lineTo(e.offsetX, e.offsetY);
-          ctx.stroke();
-        }
-      });
-
-      canvas.addEventListener("mouseup", () => drawing = false);
-      canvas.addEventListener("mouseleave", () => drawing = false);
-    }
-
-    function clearSignature(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      const ctx = canvas.getContext("2d");
+    function openModal(target) {
+      currentTarget = target;
+      modal.style.display = "flex";
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+    function closeModal() {
+      modal.style.display = "none";
+      currentTarget = null;
+    }
 
-    initSignature("sigCustomer");
-    initSignature("sigEngineer");
+    canvas.addEventListener("mousedown", e => {
+      drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY);
+    });
+    canvas.addEventListener("mousemove", e => {
+      if (drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); }
+    });
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseleave", () => drawing = false);
 
-    // Auto isi nama Customer dari "Request By"
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      if (currentTarget) {
+        const dataURL = canvas.toDataURL("image/png");
+        document.getElementById(currentTarget + "Img").src = dataURL;
+      }
+      closeModal();
+    });
+    document.getElementById("closeBtn").addEventListener("click", closeModal);
+
+    document.getElementById("sigCustomerBox").addEventListener("click", () => openModal("sigCustomer"));
+    document.getElementById("sigEngineerBox").addEventListener("click", () => openModal("sigEngineer"));
+
+    // Auto isi nama
     document.getElementById("requestBy").addEventListener("input", function() {
       document.getElementById("customerSignName").textContent = this.value || "______________________";
     });
-
-    // Auto isi nama Engineer dari "Completed By"
     document.getElementById("engineerName").addEventListener("input", function() {
       document.getElementById("engineerSignName").textContent = this.value || "______________________";
+    });
+
+    // === Download PDF ===
+    document.getElementById('download').addEventListener('click', () => {
+      const report = document.querySelector('.report');
+      html2canvas(report, { scale: 2, useCORS: true }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        pdf.save('PJM-Service-Report.pdf');
+      });
     });
   </script>
 </body>
