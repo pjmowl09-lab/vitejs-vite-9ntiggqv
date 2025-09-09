@@ -102,6 +102,10 @@
       cursor: pointer;
       text-align: center;
     }
+    canvas {
+      border: 1px solid #000;
+      cursor: crosshair;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -206,10 +210,14 @@
       <div class="row" style="text-align:center; margin-top:30px;">
         <div style="width:45%">
           <p><b>Customer</b></p>
+          <canvas id="sigCustomer" width="300" height="100"></canvas><br>
+          <button type="button" onclick="clearSignature('sigCustomer')">Clear</button>
           <p>( <span id="customerSignName">______________________</span> )</p>
         </div>
         <div style="width:45%">
           <p><b>Engineer / Electromedical</b></p>
+          <canvas id="sigEngineer" width="300" height="100"></canvas><br>
+          <button type="button" onclick="clearSignature('sigEngineer')">Clear</button>
           <p>( <span id="engineerSignName">______________________</span> )</p>
         </div>
       </div>
@@ -220,7 +228,7 @@
   <button class="download-btn" id="download">Download PDF</button>
 
   <script>
-    // --- PDF Download ---
+    // Fungsi Download PDF
     document.getElementById('download').addEventListener('click', () => {
       const report = document.querySelector('.report');
       const images = report.querySelectorAll('img');
@@ -247,63 +255,47 @@
       }
     });
 
-    // --- Tanda tangan otomatis ---
+    // Signature Canvas
+    function initSignature(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", e => {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("mousemove", e => {
+        if (drawing) {
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      });
+
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mouseleave", () => drawing = false);
+    }
+
+    function clearSignature(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    initSignature("sigCustomer");
+    initSignature("sigEngineer");
+
+    // Auto isi nama Customer dari "Request By"
     document.getElementById("requestBy").addEventListener("input", function() {
       document.getElementById("customerSignName").textContent = this.value || "______________________";
     });
 
+    // Auto isi nama Engineer dari "Completed By"
     document.getElementById("engineerName").addEventListener("input", function() {
       document.getElementById("engineerSignName").textContent = this.value || "______________________";
     });
-  </script>
-
-  <script>
-    // --- Google Drive Upload (opsional, tinggal isi API_KEY & CLIENT_ID) ---
-    function authenticate() {
-      return gapi.auth2.getAuthInstance()
-        .signIn({scope: "https://www.googleapis.com/auth/drive.file"})
-        .then(() => console.log("Sign-in successful"))
-        .catch(err => console.error(err));
-    }
-
-    function loadClient() {
-      gapi.client.setApiKey(API_KEY);
-      return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
-        .then(() => console.log("GAPI client loaded"))
-        .catch(err => console.error(err));
-    }
-
-    gapi.load("client:auth2", () => {
-      gapi.auth2.init({client_id: CLIENT_ID});
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registered.', reg))
-          .catch(err => console.log('Service Worker failed:', err));
-      });
-    }
-
-    function uploadPDF(pdfBlob, fileName) {
-      const metadata = {
-        'name': fileName,
-        'mimeType': 'application/pdf'
-      };
-
-      const form = new FormData();
-      form.append("metadata", new Blob([JSON.stringify(metadata)], {type: "application/json"}));
-      form.append("file", pdfBlob);
-
-      fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id", {
-        method: "POST",
-        headers: new Headers({'Authorization': 'Bearer ' + gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token}),
-        body: form
-      })
-      .then(response => response.json())
-      .then(data => console.log("File uploaded, ID:", data.id))
-      .catch(err => console.error(err));
-    }
   </script>
 </body>
 </html>
