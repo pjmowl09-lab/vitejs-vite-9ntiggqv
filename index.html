@@ -7,24 +7,50 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
     .report { background: white; padding: 20px; border: 1px solid #ccc; width: 900px; margin: auto; }
+    h2 { text-align: center; margin-bottom: 10px; }
     .section { margin-top: 15px; border: 1px solid #aaa; padding: 10px; }
-    .row { display: flex; justify-content: space-between; margin: 5px 0; }
-    .signature-box { width: 300px; height: 100px; border: 1px solid #000; cursor: pointer; }
+    .section-title { font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #aaa; padding-bottom: 3px; }
+    label { display: inline-block; width: 150px; margin: 3px 0; }
+    input, textarea, select { width: calc(100% - 160px); padding: 3px; margin: 3px 0; }
+    input[type="checkbox"], input[type="radio"] { width: auto; margin-right: 5px; }
+    .row { display: flex; justify-content: space-between; margin: 5px 0; flex-wrap: wrap; }
+    .small-input { width: 100px !important; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table, th, td { border: 1px solid #000; }
+    td { padding: 5px; text-align: center; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .logo-block img { height: 80px; }
+    .slogan { margin: 0; font-size: 12px; text-align: center; }
+    .title { margin: 0 auto; text-align: center; flex: 1; }
+    .title h2 { font-size: 28px; margin: 0; }
+    .signature-box { width: 300px; height: 100px; border: 1px solid #000; cursor: pointer; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
     .signature-preview { width: 100%; height: 100%; object-fit: contain; }
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;
     }
     .modal-content {
-      background: white; padding: 20px; border-radius: 8px; text-align: center;
+      background: white; padding: 20px; border-radius: 8px; text-align: center; max-width: 95%;
     }
     canvas { border: 1px solid #000; cursor: crosshair; touch-action: none; }
-    button { margin: 5px; padding: 8px 15px; }
-    input, textarea { width: 90%; margin: 5px 0; padding: 5px; }
+    button { margin: 5px; padding: 8px 15px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="report">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-block">
+        <img src="https://res.cloudinary.com/dctn5devk/image/upload/v1756081418/logo-pjm_ggsluh.png" alt="LogoPJM">
+        <p class="slogan">
+          We Come To Bring Change<br>Kami datang membawa perubahan
+        </p>
+      </div>
+      <div class="title">
+        <h2>PJM SERVICE REPORT</h2>
+      </div>
+    </div>
+
     <!-- Customer Information -->
     <div class="section">
       <div class="row" style="align-items: center;">
@@ -55,7 +81,7 @@
           <label><input type="checkbox"> Warranty</label><br>
           <label><input type="checkbox"> Solved</label><br>
           <br><br><br><br>
-          <p><b>COSTUMER</b></p>
+          <p><b>CUSTOMER</b></p>
           <label>Request By</label><input type="text" id="requestBy"><br>
           <label>Date/Time</label><input type="datetime-local"><br>
         </div>
@@ -109,6 +135,7 @@
         <div style="width:45%">
           <p><b>Customer</b></p>
           <div id="sigCustomerBox" class="signature-box">
+            <span>Klik untuk tanda tangan</span>
             <img id="sigCustomerImg" class="signature-preview">
           </div>
           <p>( <span id="customerSignName">______________________</span> )</p>
@@ -116,6 +143,7 @@
         <div style="width:45%">
           <p><b>Engineer / Electromedical</b></p>
           <div id="sigEngineerBox" class="signature-box">
+            <span>Klik untuk tanda tangan</span>
             <img id="sigEngineerImg" class="signature-preview">
           </div>
           <p>( <span id="engineerSignName">______________________</span> )</p>
@@ -209,7 +237,7 @@
     document.getElementById("sigCustomerBox").addEventListener("click", () => openModal("sigCustomer"));
     document.getElementById("sigEngineerBox").addEventListener("click", () => openModal("sigEngineer"));
 
-    // Auto isi nama
+    // Auto isi nama dari input
     document.getElementById("requestBy").addEventListener("input", function() {
       document.getElementById("customerSignName").textContent = this.value || "______________________";
     });
