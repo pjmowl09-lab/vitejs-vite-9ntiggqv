@@ -62,7 +62,7 @@
           <label>Department</label><input type="text"><br>
         </div>
         <div style="width:48%">
-          <label>Address</label><input type="text"><br>
+          <label>Address</label><input type="text" id="customerName"><br>
           <label>Contact Person</label><input type="text"><br>
         </div>
       </div>
@@ -168,8 +168,9 @@
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, 'JPEG', 10, 10, imgWidth, imgHeight, '', 'FAST');
-        pdf.save('PJM-Service-Report.pdf');
+        let rsName = document.getElementById("customerName").value || "Unknown";
+        rsName = rsName.replace(/[^\w\s-]/g, "").trim(); // bersihin karakter aneh
+        pdf.save(`PJM-Service-Report - ${rsName}.pdf`);
       });
     });
 
