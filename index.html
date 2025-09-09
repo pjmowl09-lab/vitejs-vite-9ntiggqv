@@ -27,8 +27,12 @@
     .title h2 { font-size: 28px; margin: 0; }
     .download-btn { display: block; margin: 20px auto; padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     .signature-box { width: 300px; height: 100px; border: 1px dashed #555; margin: auto; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; }
-    .signature-box img { max-width: 100%; max-height: 100%; display: block; }
+    .signature-box img { max-width: 100%; max-height: 100%; display: none; /* default sembunyi */ }
     .signature-box .placeholder { color: #777; font-size: 14px; position: absolute; }
+    .signature-box.filled { border: none; /* hilangkan garis */ }
+    .signature-box.filled .placeholder { display: none; /* hilangkan teks */ }
+    .signature-box.filled img { display: block; /* tampilkan gambar */ }
+
     /* Modal tanda tangan */
     #signatureModal { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
     #signatureModal .modal-content { background:#fff; padding:20px; border-radius:8px; text-align:center; }
@@ -223,17 +227,29 @@
     canvas.addEventListener("touchend", e => { e.preventDefault(); drawing = false; });
 
     // Buttons
-    document.getElementById("clearBtn").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
     document.getElementById("saveBtn").addEventListener("click", () => {
-      if (currentTarget) {
-        const dataURL = canvas.toDataURL("image/png");
-        const img = document.getElementById(currentTarget + "Img");
-        const placeholder = document.querySelector("#" + currentTarget + "Box .placeholder");
-        img.src = dataURL;
-        if (placeholder) placeholder.style.display = "none"; // sembunyikan tulisan
-      }
-      closeModal();
-    });
+    if (currentTarget) {
+    const dataURL = canvas.toDataURL("image/png");
+    const img = document.getElementById(currentTarget + "Img");
+    const box = document.getElementById(currentTarget + "Box");
+    img.src = dataURL;
+    box.classList.add("filled"); // tambahkan class -> border hilang & teks hilang
+  }
+  closeModal();
+});
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (currentTarget) {
+    const img = document.getElementById(currentTarget + "Img");
+    const box = document.getElementById(currentTarget + "Box");
+
+    img.src = "";
+    box.classList.remove("filled"); // hapus class -> border & teks muncul lagi
+  }
+});
+
     document.getElementById("closeBtn").addEventListener("click", closeModal);
 
     // Open modal
